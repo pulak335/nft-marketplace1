@@ -1,7 +1,104 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+
+interface Auction {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  timeLeft: string;
+  bids: number;
+  creator: string;
+}
+
+const activeAuctions: Auction[] = [
+  {
+    id: "1",
+    name: "Golden Hour #3456",
+    description: "A stunning sunset captured in digital form.",
+    price: 3.2,
+    image: "gradient-yellow-orange",
+    timeLeft: "2h 15m",
+    bids: 12,
+    creator: "SunsetLover"
+  },
+  {
+    id: "2",
+    name: "Crimson Wave #7890",
+    description: "Abstract art representing the power of nature.",
+    price: 1.8,
+    image: "gradient-red-pink",
+    timeLeft: "5h 42m",
+    bids: 8,
+    creator: "AbstractMaster"
+  },
+  {
+    id: "3",
+    name: "Mystic Portal #1234",
+    description: "A gateway to another dimension in digital art.",
+    price: 4.5,
+    image: "gradient-indigo-purple",
+    timeLeft: "1h 23m",
+    bids: 15,
+    creator: "MysticArtist"
+  },
+  {
+    id: "4",
+    name: "Cosmic Dreamer #1234",
+    description: "A mesmerizing digital artwork exploring the depths of space.",
+    price: 2.5,
+    image: "gradient-purple-pink",
+    timeLeft: "3h 7m",
+    bids: 9,
+    creator: "CryptoArtist123"
+  },
+  {
+    id: "5",
+    name: "Neon City #5678",
+    description: "A futuristic cityscape with neon lights and cyberpunk aesthetics.",
+    price: 1.8,
+    image: "gradient-blue-cyan",
+    timeLeft: "4h 12m",
+    bids: 6,
+    creator: "DigitalCollector"
+  }
+];
 
 export default function Home() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Auto-advance carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % activeAuctions.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % activeAuctions.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + activeAuctions.length) % activeAuctions.length);
+  };
+
+  const getGradientClass = (image: string) => {
+    const gradients: { [key: string]: string } = {
+      "gradient-purple-pink": "bg-gradient-to-br from-purple-400 to-pink-400",
+      "gradient-blue-cyan": "bg-gradient-to-br from-blue-400 to-cyan-400",
+      "gradient-green-emerald": "bg-gradient-to-br from-green-400 to-emerald-400",
+      "gradient-yellow-orange": "bg-gradient-to-br from-yellow-400 to-orange-400",
+      "gradient-red-pink": "bg-gradient-to-br from-red-400 to-pink-400",
+      "gradient-indigo-purple": "bg-gradient-to-br from-indigo-400 to-purple-400"
+    };
+    return gradients[image] || "bg-gradient-to-br from-gray-400 to-gray-600";
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
       {/* Header */}
@@ -17,6 +114,9 @@ export default function Home() {
             <nav className="hidden md:flex space-x-8">
               <Link href="/marketplace" className="text-white/80 hover:text-white transition-colors">
                 Marketplace
+              </Link>
+              <Link href="/auctions" className="text-white/80 hover:text-white transition-colors">
+                Auctions
               </Link>
               <Link href="#categories" className="text-white/80 hover:text-white transition-colors">
                 Categories
@@ -312,6 +412,100 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Active Auctions Carousel Section */}
+      <section id="bids" className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-4xl font-bold text-white">Active Auctions</h2>
+            <Link href="/auctions" className="text-purple-400 hover:text-purple-300 font-medium">
+              View All Auctions →
+            </Link>
+          </div>
+          
+          {/* Carousel Container */}
+          <div className="relative">
+            <div className="overflow-hidden rounded-2xl">
+              <div 
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
+                {activeAuctions.map((auction) => (
+                  <div key={auction.id} className="w-full flex-shrink-0">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+                      {activeAuctions.slice(0, 3).map((item) => (
+                        <div key={item.id} className="bg-white/10 backdrop-blur-md rounded-2xl p-6">
+                          <div className={`h-48 ${getGradientClass(item.image)} rounded-xl mb-4 relative`}>
+                            <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+                              Auction
+                            </div>
+                            <div className="absolute bottom-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+                              {item.timeLeft}
+                            </div>
+                          </div>
+                          <h3 className="text-white font-bold text-xl mb-2">{item.name}</h3>
+                          <p className="text-white/60 mb-4">{item.description}</p>
+                          <div className="space-y-3">
+                            <div className="flex justify-between">
+                              <span className="text-white/60">Current Bid:</span>
+                              <span className="text-white font-bold">{item.price} ETH</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-white/60">Time Left:</span>
+                              <span className="text-white font-bold">{item.timeLeft}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-white/60">Bids:</span>
+                              <span className="text-white font-bold">{item.bids}</span>
+                            </div>
+                          </div>
+                          <div className="mt-4 space-y-2">
+                            <input type="number" className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/40" placeholder="Enter bid amount" step="0.01" />
+                            <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+                              Place Bid
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Carousel Navigation */}
+            <button
+              onClick={prevSlide}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={nextSlide}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-all"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+
+            {/* Carousel Indicators */}
+            <div className="flex justify-center mt-6 space-x-2">
+              {activeAuctions.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`w-3 h-3 rounded-full transition-all ${
+                    index === currentSlide ? 'bg-white' : 'bg-white/30'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* How It Works Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
@@ -348,95 +542,6 @@ export default function Home() {
               <p className="text-white/60">
                 Own your NFTs, trade them with other collectors, or list them for sale in our marketplace.
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Bidding Section */}
-      <section id="bids" className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold text-white text-center mb-12">Active Auctions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Auction Card 1 */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6">
-              <div className="h-48 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-xl mb-4"></div>
-              <h3 className="text-white font-bold text-xl mb-2">Golden Hour #3456</h3>
-              <p className="text-white/60 mb-4">A stunning sunset captured in digital form.</p>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-white/60">Current Bid:</span>
-                  <span className="text-white font-bold">3.2 ETH</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-white/60">Time Left:</span>
-                  <span className="text-white font-bold">2h 15m</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-white/60">Bids:</span>
-                  <span className="text-white font-bold">12</span>
-                </div>
-              </div>
-              <div className="mt-4 space-y-2">
-                <input type="number" className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/40" placeholder="Enter bid amount" step="0.01" />
-                <button className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-2 rounded-lg font-medium hover:from-yellow-600 hover:to-orange-600 transition-all">
-                  Place Bid
-                </button>
-              </div>
-            </div>
-
-            {/* Auction Card 2 */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6">
-              <div className="h-48 bg-gradient-to-br from-red-400 to-pink-400 rounded-xl mb-4"></div>
-              <h3 className="text-white font-bold text-xl mb-2">Crimson Wave #7890</h3>
-              <p className="text-white/60 mb-4">Abstract art representing the power of nature.</p>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-white/60">Current Bid:</span>
-                  <span className="text-white font-bold">1.8 ETH</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-white/60">Time Left:</span>
-                  <span className="text-white font-bold">5h 42m</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-white/60">Bids:</span>
-                  <span className="text-white font-bold">8</span>
-                </div>
-              </div>
-              <div className="mt-4 space-y-2">
-                <input type="number" className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/40" placeholder="Enter bid amount" step="0.01" />
-                <button className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white py-2 rounded-lg font-medium hover:from-red-600 hover:to-pink-600 transition-all">
-                  Place Bid
-                </button>
-              </div>
-            </div>
-
-            {/* Auction Card 3 */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6">
-              <div className="h-48 bg-gradient-to-br from-indigo-400 to-purple-400 rounded-xl mb-4"></div>
-              <h3 className="text-white font-bold text-xl mb-2">Mystic Portal #1234</h3>
-              <p className="text-white/60 mb-4">A gateway to another dimension in digital art.</p>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-white/60">Current Bid:</span>
-                  <span className="text-white font-bold">4.5 ETH</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-white/60">Time Left:</span>
-                  <span className="text-white font-bold">1h 23m</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-white/60">Bids:</span>
-                  <span className="text-white font-bold">15</span>
-                </div>
-              </div>
-              <div className="mt-4 space-y-2">
-                <input type="number" className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/40" placeholder="Enter bid amount" step="0.01" />
-                <button className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-2 rounded-lg font-medium hover:from-indigo-600 hover:to-purple-600 transition-all">
-                  Place Bid
-                </button>
-              </div>
             </div>
           </div>
         </div>
