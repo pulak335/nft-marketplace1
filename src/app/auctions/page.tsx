@@ -159,6 +159,7 @@ export default function AuctionsPage() {
   const [sortBy, setSortBy] = useState("Ending Soon");
   const [searchQuery, setSearchQuery] = useState("");
   const [priceRange, setPriceRange] = useState([0, 10]);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const filteredAuctions = mockAuctions.filter(auction => {
     const matchesCategory = selectedCategory === "All" || auction.category === selectedCategory;
@@ -208,6 +209,146 @@ export default function AuctionsPage() {
     return "text-green-400";
   };
 
+  const AuctionCard = ({ auction }: { auction: Auction }) => (
+    <div className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden hover:transform hover:scale-105 transition-all">
+      {/* Auction Image */}
+      <div className={`h-48 ${getGradientClass(auction.image)} relative`}>
+        <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+          Auction
+        </div>
+        <div className={`absolute bottom-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm ${getTimeColor(auction.timeLeft)}`}>
+          {auction.timeLeft}
+        </div>
+      </div>
+
+      {/* Auction Details */}
+      <div className="p-6">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="text-white font-bold text-lg">{auction.name}</h3>
+          <div className="flex items-center space-x-1">
+            <svg className="w-4 h-4 text-white/60" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+            </svg>
+            <span className="text-white/60 text-sm">{auction.likes}</span>
+          </div>
+        </div>
+
+        <p className="text-white/60 text-sm mb-4 line-clamp-2">{auction.description}</p>
+
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <div className="text-white/60 text-sm">Creator</div>
+            <div className="text-white font-medium">{auction.creator}</div>
+          </div>
+          <div>
+            <div className="text-white/60 text-sm">Category</div>
+            <div className="text-white font-medium">{auction.category}</div>
+          </div>
+        </div>
+
+        <div className="space-y-3 mb-4">
+          <div className="flex justify-between">
+            <span className="text-white/60 text-sm">Current Bid:</span>
+            <span className="text-white font-bold">{auction.currentBid} ETH</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-white/60 text-sm">Min Bid:</span>
+            <span className="text-white font-medium">{auction.minBid} ETH</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-white/60 text-sm">Bids:</span>
+            <span className="text-white font-medium">{auction.bids} ({auction.bidders} bidders)</span>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <input 
+            type="number" 
+            className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/40" 
+            placeholder={`Min bid: ${auction.minBid} ETH`} 
+            step="0.01" 
+            min={auction.minBid}
+          />
+          <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+            Place Bid
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const AuctionListItem = ({ auction }: { auction: Auction }) => (
+    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 hover:transform hover:scale-105 transition-all">
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Auction Image */}
+        <div className={`w-full md:w-48 h-48 ${getGradientClass(auction.image)} rounded-xl relative flex-shrink-0`}>
+          <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+            Auction
+          </div>
+          <div className={`absolute bottom-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm ${getTimeColor(auction.timeLeft)}`}>
+            {auction.timeLeft}
+          </div>
+        </div>
+
+        {/* Auction Details */}
+        <div className="flex-1">
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h3 className="text-white font-bold text-xl mb-2">{auction.name}</h3>
+              <p className="text-white/60 text-sm mb-4">{auction.description}</p>
+            </div>
+            <div className="flex items-center space-x-1">
+              <svg className="w-4 h-4 text-white/60" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+              </svg>
+              <span className="text-white/60 text-sm">{auction.likes}</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div>
+              <div className="text-white/60 text-sm">Creator</div>
+              <div className="text-white font-medium">{auction.creator}</div>
+            </div>
+            <div>
+              <div className="text-white/60 text-sm">Category</div>
+              <div className="text-white font-medium">{auction.category}</div>
+            </div>
+            <div>
+              <div className="text-white/60 text-sm">Current Bid</div>
+              <div className="text-white font-bold">{auction.currentBid} ETH</div>
+            </div>
+            <div>
+              <div className="text-white/60 text-sm">Min Bid</div>
+              <div className="text-white font-medium">{auction.minBid} ETH</div>
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <div className="flex space-x-4">
+              <div>
+                <span className="text-white/60 text-sm">Bids: </span>
+                <span className="text-white font-medium">{auction.bids} ({auction.bidders} bidders)</span>
+              </div>
+            </div>
+            <div className="flex space-x-2">
+              <input 
+                type="number" 
+                className="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/40 w-32" 
+                placeholder={`Min: ${auction.minBid}`} 
+                step="0.01" 
+                min={auction.minBid}
+              />
+              <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+                Place Bid
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
       {/* Header */}
@@ -229,20 +370,22 @@ export default function AuctionsPage() {
               <Link href="/auctions" className="text-white font-medium">
                 Auctions
               </Link>
-              <Link href="/#categories" className="text-white/80 hover:text-white transition-colors">
+              <Link href="/categories" className="text-white/80 hover:text-white transition-colors">
                 Categories
               </Link>
-              <Link href="/#bids" className="text-white/80 hover:text-white transition-colors">
+              <Link href="/bids" className="text-white/80 hover:text-white transition-colors">
                 Bids
               </Link>
-              <Link href="/#profile" className="text-white/80 hover:text-white transition-colors">
+              <Link href="/profile" className="text-white/80 hover:text-white transition-colors">
                 Profile
               </Link>
             </nav>
             <div className="flex items-center space-x-4">
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
-                Connect Wallet
-              </button>
+              <Link href="/connect-wallet">
+                <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+                  Connect Wallet
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -326,91 +469,59 @@ export default function AuctionsPage() {
           </div>
         </div>
 
-        {/* Results Count */}
+        {/* Results Count and View Toggle */}
         <div className="flex justify-between items-center mb-6">
           <p className="text-white/60">
             Showing {sortedAuctions.length} of {mockAuctions.length} auctions
           </p>
           <div className="flex space-x-2">
-            <button className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors">
-              Grid View
+            <button 
+              onClick={() => setViewMode("grid")}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                viewMode === "grid" 
+                  ? "bg-white/20 text-white" 
+                  : "bg-white/5 text-white/60 hover:text-white hover:bg-white/10"
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                <span>Grid View</span>
+              </div>
             </button>
-            <button className="bg-white/5 hover:bg-white/10 text-white/60 hover:text-white px-4 py-2 rounded-lg transition-colors">
-              List View
+            <button 
+              onClick={() => setViewMode("list")}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                viewMode === "list" 
+                  ? "bg-white/20 text-white" 
+                  : "bg-white/5 text-white/60 hover:text-white hover:bg-white/10"
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                </svg>
+                <span>List View</span>
+              </div>
             </button>
           </div>
         </div>
 
-        {/* Auctions Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sortedAuctions.map((auction) => (
-            <div key={auction.id} className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden hover:transform hover:scale-105 transition-all">
-              {/* Auction Image */}
-              <div className={`h-48 ${getGradientClass(auction.image)} relative`}>
-                <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-                  Auction
-                </div>
-                <div className={`absolute bottom-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm ${getTimeColor(auction.timeLeft)}`}>
-                  {auction.timeLeft}
-                </div>
-              </div>
-
-              {/* Auction Details */}
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-white font-bold text-lg">{auction.name}</h3>
-                  <div className="flex items-center space-x-1">
-                    <svg className="w-4 h-4 text-white/60" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-                    </svg>
-                    <span className="text-white/60 text-sm">{auction.likes}</span>
-                  </div>
-                </div>
-
-                <p className="text-white/60 text-sm mb-4 line-clamp-2">{auction.description}</p>
-
-                <div className="flex justify-between items-center mb-4">
-                  <div>
-                    <div className="text-white/60 text-sm">Creator</div>
-                    <div className="text-white font-medium">{auction.creator}</div>
-                  </div>
-                  <div>
-                    <div className="text-white/60 text-sm">Category</div>
-                    <div className="text-white font-medium">{auction.category}</div>
-                  </div>
-                </div>
-
-                <div className="space-y-3 mb-4">
-                  <div className="flex justify-between">
-                    <span className="text-white/60 text-sm">Current Bid:</span>
-                    <span className="text-white font-bold">{auction.currentBid} ETH</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-white/60 text-sm">Min Bid:</span>
-                    <span className="text-white font-medium">{auction.minBid} ETH</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-white/60 text-sm">Bids:</span>
-                    <span className="text-white font-medium">{auction.bids} ({auction.bidders} bidders)</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <input 
-                    type="number" 
-                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/40" 
-                    placeholder={`Min bid: ${auction.minBid} ETH`} 
-                    step="0.01" 
-                    min={auction.minBid}
-                  />
-                  <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
-                    Place Bid
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* Auctions Display */}
+        {viewMode === "grid" ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sortedAuctions.map((auction) => (
+              <AuctionCard key={auction.id} auction={auction} />
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {sortedAuctions.map((auction) => (
+              <AuctionListItem key={auction.id} auction={auction} />
+            ))}
+          </div>
+        )}
 
         {/* Load More */}
         {sortedAuctions.length > 0 && (

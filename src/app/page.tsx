@@ -118,20 +118,22 @@ export default function Home() {
               <Link href="/auctions" className="text-white/80 hover:text-white transition-colors">
                 Auctions
               </Link>
-              <Link href="#categories" className="text-white/80 hover:text-white transition-colors">
+              <Link href="/categories" className="text-white/80 hover:text-white transition-colors">
                 Categories
               </Link>
-              <Link href="#bids" className="text-white/80 hover:text-white transition-colors">
+              <Link href="/bids" className="text-white/80 hover:text-white transition-colors">
                 Bids
               </Link>
-              <Link href="#profile" className="text-white/80 hover:text-white transition-colors">
+              <Link href="/profile" className="text-white/80 hover:text-white transition-colors">
                 Profile
               </Link>
             </nav>
             <div className="flex items-center space-x-4">
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
-                Connect Wallet
-              </button>
+              <Link href="/connect-wallet">
+                <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+                  Connect Wallet
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -187,10 +189,15 @@ export default function Home() {
       {/* NFT Categories Section */}
       <section id="categories" className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold text-white text-center mb-12">NFT Categories</h2>
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-4xl font-bold text-white">NFT Categories</h2>
+            <Link href="/categories" className="text-purple-400 hover:text-purple-300 font-medium">
+              View All Categories →
+            </Link>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Art Category */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center hover:transform hover:scale-105 transition-all cursor-pointer">
+            <Link href="/categories" className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center hover:transform hover:scale-105 transition-all cursor-pointer">
               <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full mx-auto mb-4 flex items-center justify-center">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z" />
@@ -199,10 +206,10 @@ export default function Home() {
               <h3 className="text-white font-bold text-xl mb-2">Digital Art</h3>
               <p className="text-white/60 mb-4">Unique digital artworks and illustrations</p>
               <div className="text-white/80 font-medium">2,500+ Items</div>
-            </div>
+            </Link>
 
             {/* Music Category */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center hover:transform hover:scale-105 transition-all cursor-pointer">
+            <Link href="/categories" className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center hover:transform hover:scale-105 transition-all cursor-pointer">
               <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-full mx-auto mb-4 flex items-center justify-center">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
@@ -211,10 +218,10 @@ export default function Home() {
               <h3 className="text-white font-bold text-xl mb-2">Music</h3>
               <p className="text-white/60 mb-4">Exclusive music tracks and albums</p>
               <div className="text-white/80 font-medium">800+ Items</div>
-            </div>
+            </Link>
 
             {/* Gaming Category */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center hover:transform hover:scale-105 transition-all cursor-pointer">
+            <Link href="/categories" className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center hover:transform hover:scale-105 transition-all cursor-pointer">
               <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-400 rounded-full mx-auto mb-4 flex items-center justify-center">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h8m-9-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -223,10 +230,10 @@ export default function Home() {
               <h3 className="text-white font-bold text-xl mb-2">Gaming</h3>
               <p className="text-white/60 mb-4">In-game items and collectibles</p>
               <div className="text-white/80 font-medium">1,200+ Items</div>
-            </div>
+            </Link>
 
             {/* Collectibles Category */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center hover:transform hover:scale-105 transition-all cursor-pointer">
+            <Link href="/categories" className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center hover:transform hover:scale-105 transition-all cursor-pointer">
               <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full mx-auto mb-4 flex items-center justify-center">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -235,7 +242,7 @@ export default function Home() {
               <h3 className="text-white font-bold text-xl mb-2">Collectibles</h3>
               <p className="text-white/60 mb-4">Rare collectibles and memorabilia</p>
               <div className="text-white/80 font-medium">3,000+ Items</div>
-            </div>
+            </Link>
           </div>
         </div>
       </section>

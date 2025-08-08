@@ -129,6 +129,7 @@ export default function MarketplacePage() {
   const [sortBy, setSortBy] = useState("Recently Listed");
   const [searchQuery, setSearchQuery] = useState("");
   const [priceRange, setPriceRange] = useState([0, 10]);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const filteredNFTs = mockNFTs.filter(nft => {
     const matchesCategory = selectedCategory === "All" || nft.category === selectedCategory;
@@ -168,6 +169,153 @@ export default function MarketplacePage() {
     return gradients[image] || "bg-gradient-to-br from-gray-400 to-gray-600";
   };
 
+  const NFTCard = ({ nft }: { nft: NFT }) => (
+    <div className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden hover:transform hover:scale-105 transition-all">
+      {/* NFT Image */}
+      <div className={`h-48 ${getGradientClass(nft.image)} relative`}>
+        {nft.status === "auction" && (
+          <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+            Auction
+          </div>
+        )}
+        {nft.status === "for-sale" && (
+          <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+            For Sale
+          </div>
+        )}
+        {nft.timeLeft && (
+          <div className="absolute bottom-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+            {nft.timeLeft}
+          </div>
+        )}
+      </div>
+
+      {/* NFT Details */}
+      <div className="p-6">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="text-white font-bold text-lg">{nft.name}</h3>
+          <div className="flex items-center space-x-1">
+            <svg className="w-4 h-4 text-white/60" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+            </svg>
+            <span className="text-white/60 text-sm">{nft.likes}</span>
+          </div>
+        </div>
+
+        <p className="text-white/60 text-sm mb-4 line-clamp-2">{nft.description}</p>
+
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <div className="text-white/60 text-sm">Creator</div>
+            <div className="text-white font-medium">{nft.creator}</div>
+          </div>
+          <div>
+            <div className="text-white/60 text-sm">Category</div>
+            <div className="text-white font-medium">{nft.category}</div>
+          </div>
+        </div>
+
+        <div className="flex justify-between items-center">
+          <div>
+            <div className="text-white/60 text-sm">
+              {nft.status === "auction" ? "Current Bid" : "Price"}
+            </div>
+            <div className="text-white font-bold text-lg">{nft.price} ETH</div>
+          </div>
+          <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+            {nft.status === "auction" ? "Place Bid" : "Buy Now"}
+          </button>
+        </div>
+
+        {nft.bids > 0 && (
+          <div className="mt-3 text-center">
+            <span className="text-white/60 text-sm">{nft.bids} bids placed</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  const NFTListItem = ({ nft }: { nft: NFT }) => (
+    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 hover:transform hover:scale-105 transition-all">
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* NFT Image */}
+        <div className={`w-full md:w-48 h-48 ${getGradientClass(nft.image)} rounded-xl relative flex-shrink-0`}>
+          {nft.status === "auction" && (
+            <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+              Auction
+            </div>
+          )}
+          {nft.status === "for-sale" && (
+            <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+              For Sale
+            </div>
+          )}
+          {nft.timeLeft && (
+            <div className="absolute bottom-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+              {nft.timeLeft}
+            </div>
+          )}
+        </div>
+
+        {/* NFT Details */}
+        <div className="flex-1">
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h3 className="text-white font-bold text-xl mb-2">{nft.name}</h3>
+              <p className="text-white/60 text-sm mb-4">{nft.description}</p>
+            </div>
+            <div className="flex items-center space-x-1">
+              <svg className="w-4 h-4 text-white/60" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+              </svg>
+              <span className="text-white/60 text-sm">{nft.likes}</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div>
+              <div className="text-white/60 text-sm">Creator</div>
+              <div className="text-white font-medium">{nft.creator}</div>
+            </div>
+            <div>
+              <div className="text-white/60 text-sm">Category</div>
+              <div className="text-white font-medium">{nft.category}</div>
+            </div>
+            <div>
+              <div className="text-white/60 text-sm">{nft.status === "auction" ? "Current Bid" : "Price"}</div>
+              <div className="text-white font-bold">{nft.price} ETH</div>
+            </div>
+            <div>
+              <div className="text-white/60 text-sm">Status</div>
+              <div className="text-white font-medium capitalize">{nft.status.replace('-', ' ')}</div>
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <div className="flex space-x-4">
+              {nft.bids > 0 && (
+                <div>
+                  <span className="text-white/60 text-sm">Bids: </span>
+                  <span className="text-white font-medium">{nft.bids} placed</span>
+                </div>
+              )}
+              {nft.timeLeft && (
+                <div>
+                  <span className="text-white/60 text-sm">Time Left: </span>
+                  <span className="text-white font-medium">{nft.timeLeft}</span>
+                </div>
+              )}
+            </div>
+            <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+              {nft.status === "auction" ? "Place Bid" : "Buy Now"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
       {/* Header */}
@@ -186,20 +334,25 @@ export default function MarketplacePage() {
               <Link href="/marketplace" className="text-white font-medium">
                 Marketplace
               </Link>
-              <Link href="/#categories" className="text-white/80 hover:text-white transition-colors">
+              <Link href="/auctions" className="text-white/80 hover:text-white transition-colors">
+                Auctions
+              </Link>
+              <Link href="/categories" className="text-white/80 hover:text-white transition-colors">
                 Categories
               </Link>
-              <Link href="/#bids" className="text-white/80 hover:text-white transition-colors">
+              <Link href="/bids" className="text-white/80 hover:text-white transition-colors">
                 Bids
               </Link>
-              <Link href="/#profile" className="text-white/80 hover:text-white transition-colors">
+              <Link href="/profile" className="text-white/80 hover:text-white transition-colors">
                 Profile
               </Link>
             </nav>
             <div className="flex items-center space-x-4">
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
-                Connect Wallet
-              </button>
+              <Link href="/connect-wallet">
+                <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
+                  Connect Wallet
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -283,90 +436,59 @@ export default function MarketplacePage() {
           </div>
         </div>
 
-        {/* Results Count */}
+        {/* Results Count and View Toggle */}
         <div className="flex justify-between items-center mb-6">
           <p className="text-white/60">
             Showing {sortedNFTs.length} of {mockNFTs.length} NFTs
           </p>
           <div className="flex space-x-2">
-            <button className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors">
-              Grid View
+            <button 
+              onClick={() => setViewMode("grid")}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                viewMode === "grid" 
+                  ? "bg-white/20 text-white" 
+                  : "bg-white/5 text-white/60 hover:text-white hover:bg-white/10"
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                <span>Grid View</span>
+              </div>
             </button>
-            <button className="bg-white/5 hover:bg-white/10 text-white/60 hover:text-white px-4 py-2 rounded-lg transition-colors">
-              List View
+            <button 
+              onClick={() => setViewMode("list")}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                viewMode === "list" 
+                  ? "bg-white/20 text-white" 
+                  : "bg-white/5 text-white/60 hover:text-white hover:bg-white/10"
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                </svg>
+                <span>List View</span>
+              </div>
             </button>
           </div>
         </div>
 
-        {/* NFT Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {sortedNFTs.map((nft) => (
-            <div key={nft.id} className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden hover:transform hover:scale-105 transition-all">
-              {/* NFT Image */}
-              <div className={`h-48 ${getGradientClass(nft.image)} relative`}>
-                {nft.status === "auction" && (
-                  <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-                    Auction
-                  </div>
-                )}
-                {nft.status === "for-sale" && (
-                  <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-                    For Sale
-                  </div>
-                )}
-                {nft.timeLeft && (
-                  <div className="absolute bottom-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-                    {nft.timeLeft}
-                  </div>
-                )}
-              </div>
-
-              {/* NFT Details */}
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-white font-bold text-lg">{nft.name}</h3>
-                  <div className="flex items-center space-x-1">
-                    <svg className="w-4 h-4 text-white/60" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-                    </svg>
-                    <span className="text-white/60 text-sm">{nft.likes}</span>
-                  </div>
-                </div>
-
-                <p className="text-white/60 text-sm mb-4 line-clamp-2">{nft.description}</p>
-
-                <div className="flex justify-between items-center mb-4">
-                  <div>
-                    <div className="text-white/60 text-sm">Creator</div>
-                    <div className="text-white font-medium">{nft.creator}</div>
-                  </div>
-                  <div>
-                    <div className="text-white/60 text-sm">Category</div>
-                    <div className="text-white font-medium">{nft.category}</div>
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <div>
-                    <div className="text-white/60 text-sm">
-                      {nft.status === "auction" ? "Current Bid" : "Price"}
-                    </div>
-                    <div className="text-white font-bold text-lg">{nft.price} ETH</div>
-                  </div>
-                  <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all">
-                    {nft.status === "auction" ? "Place Bid" : "Buy Now"}
-                  </button>
-                </div>
-
-                {nft.bids > 0 && (
-                  <div className="mt-3 text-center">
-                    <span className="text-white/60 text-sm">{nft.bids} bids placed</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* NFTs Display */}
+        {viewMode === "grid" ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {sortedNFTs.map((nft) => (
+              <NFTCard key={nft.id} nft={nft} />
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {sortedNFTs.map((nft) => (
+              <NFTListItem key={nft.id} nft={nft} />
+            ))}
+          </div>
+        )}
 
         {/* Load More */}
         {sortedNFTs.length > 0 && (
