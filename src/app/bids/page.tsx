@@ -380,7 +380,7 @@ export default function BidsPage() {
                       <div className="flex space-x-4">
                         {bid.status === "outbid" && (
                           <div className="text-yellow-400 text-sm font-medium">
-                            You've been outbid! Current highest: {bid.highestBid} ETH
+                            You&apos;ve been outbid! Current highest: {bid.highestBid} ETH
                           </div>
                         )}
                       </div>
@@ -483,7 +483,7 @@ export default function BidsPage() {
               </svg>
             </div>
             <h3 className="text-white font-bold text-xl mb-2">No Active Bids</h3>
-            <p className="text-white/60 mb-6">You don't have any active bids at the moment.</p>
+            <p className="text-white/60 mb-6">You don&apos;t have any active bids at the moment.</p>
             <Link
               href="/auctions"
               className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all"
@@ -501,7 +501,7 @@ export default function BidsPage() {
               </svg>
             </div>
             <h3 className="text-white font-bold text-xl mb-2">No Bid History</h3>
-            <p className="text-white/60 mb-6">You haven't placed any bids yet.</p>
+            <p className="text-white/60 mb-6">You haven&apos;t placed any bids yet.</p>
             <Link
               href="/auctions"
               className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all"

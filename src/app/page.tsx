@@ -309,7 +309,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="p-6">
-                <h3 className="text-white font-bold text-xl mb-2">Nature's Symphony #9012</h3>
+                <h3 className="text-white font-bold text-xl mb-2">Nature&apos;s Symphony #9012</h3>
                 <p className="text-white/60 mb-4">A harmonious blend of natural elements and digital artistry.</p>
                 <div className="flex justify-between items-center">
                   <div>
@@ -347,7 +347,7 @@ export default function Home() {
                     <div className="text-white/60 text-sm">Bid placed</div>
                   </div>
                 </div>
-                <div className="text-white/80 text-sm">on "Cosmic Dreamer #1234"</div>
+                <div className="text-white/80 text-sm">on &quot;Cosmic Dreamer #1234&quot;</div>
               </div>
 
               {/* Recent Bid 2 */}
@@ -365,7 +365,7 @@ export default function Home() {
                     <div className="text-white/60 text-sm">Bid placed</div>
                   </div>
                 </div>
-                <div className="text-white/80 text-sm">on "Neon City #5678"</div>
+                <div className="text-white/80 text-sm">on &quot;Neon City #5678&quot;</div>
               </div>
 
               {/* Recent Bid 3 */}
@@ -383,7 +383,7 @@ export default function Home() {
                     <div className="text-white/60 text-sm">Bid placed</div>
                   </div>
                 </div>
-                <div className="text-white/80 text-sm">on "Nature's Symphony #9012"</div>
+                <div className="text-white/80 text-sm">on &quot;Nature&apos;s Symphony #9012&quot;</div>
               </div>
             </div>
           </div>
@@ -563,7 +563,7 @@ export default function Home() {
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6">
               <h3 className="text-white font-bold text-xl mb-3">What is an NFT?</h3>
               <p className="text-white/60">
-                NFT stands for Non-Fungible Token. It's a unique digital asset that represents ownership of a specific item or piece of content on the blockchain. Unlike cryptocurrencies, each NFT is unique and cannot be exchanged on a one-to-one basis.
+                NFT stands for Non-Fungible Token. It&apos;s a unique digital asset that represents ownership of a specific item or piece of content on the blockchain. Unlike cryptocurrencies, each NFT is unique and cannot be exchanged on a one-to-one basis.
               </p>
             </div>
 
@@ -579,7 +579,7 @@ export default function Home() {
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6">
               <h3 className="text-white font-bold text-xl mb-3">What cryptocurrencies do you accept?</h3>
               <p className="text-white/60">
-                We currently accept Ethereum (ETH) for all transactions. We're working on adding support for other major cryptocurrencies like Bitcoin, Polygon, and Solana in the near future.
+                We currently accept Ethereum (ETH) for all transactions. We&apos;re working on adding support for other major cryptocurrencies like Bitcoin, Polygon, and Solana in the near future.
               </p>
             </div>
 
